@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login OctSoft</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="../media/logo.png" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <h1>Entrar</h1>
+        <div class="content">
+            <div class="left-box">
+                <img class="left-img" src="../media/meeting.png" width="300px" alt="">
+            </div>
+            <div class="right-box">
+                <form>
+                    <h1>Login</h1>
+                    <div><input type="email" id="login" placeholder="email">
+                    <img src="../media/user.png" width="16px">
+                    </div>
+                    <div><input type="password" id="senha" placeholder="senha">
+                    <img src="../media/lock.png" width="16px"></div>
+                    <div>
+                        <label>
+                            <input type="checkbox">
+                            Lembrar senha
+                        </label>
+                    </div>
+                    <button type="submit" onclick="logar(); return false">Entrar</button>
+                    <div id="mensagem">Entrando...</div>
+                </form>
+                <script>
+                    function logar(){
+
+                        let login = document.getElementById("login").value;
+                        let senha = document.getElementById("senha").value;
+                        const mensagem = document.getElementById('mensagem');
+
+                        if(login === 'admin@admin' && senha === 'admin'){
+                            mensagem.style.display = 'block';
+                            location.href="../index/home.html";
+                        }
+                        else{
+                            alert('Usuario ou senha incorretos');
+                        }
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
