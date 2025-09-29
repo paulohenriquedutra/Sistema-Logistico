@@ -1,0 +1,58 @@
+:root {
+    --primary: #033E8C;
+    --secondary: #849EBF;
+    --tertiary: #023E73;
+    --background: #f4f7f9;
+}
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background);
+}
+img{
+    width: 80px;
+}
+header {
+    display: inline-block;
+    background-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+}
+
+.header-grid, .dados {
+    display: grid;
+    grid-template-columns: 50px 150px 150px 100px 200px; 
+    gap: 7rem;
+    align-items: center;
+}
+.header-grid > div {
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+.status.pendente { background-color: #ffc107; color: #333; }
+.status.em-rota { background-color: #17a2b8; color: white; }
+.status.entregue { background-color: #28a745; color: white; }
+.status.atrasada { background-color: #dc3545; color: white; }
+
+.container-dados {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .header-grid, .dados {
+        grid-template-columns: 1fr 1fr;
+    }
+    .header-grid > div:nth-child(1),
+    .dados > .dado:nth-child(1),
+    .header-grid > div:nth-child(3),
+    .dados > .dado:nth-child(3),
+    .header-grid > div:nth-child(4),
+    .dados > .dado:nth-child(4) {
+    display: none;
+    }
+}
