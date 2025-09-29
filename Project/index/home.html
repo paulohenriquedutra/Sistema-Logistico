@@ -3,34 +3,30 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OctSoft</title>
+        <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="style.css">
         <link rel="shortcut icon" href="../media/logo.png" type="image/x-icon">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-        <title>OctSoft</title>
     </head>
-    <body>
-        <header>
-            <div class="logo_empresa">
-                <img src="../media/logo.png">
-                <p>OctSoft</p>
-            </div>
+    <body class="min-h-screen bg-gray-100">
+        <header class="sticky top-0 z-10 w-full bg-[var(--primary)] shadow-md">
+            <nav class="max-w-7xl mx-auto flex justify-between items-center py-4 px-6 lg:px-8">
+                <img src="../media/logo.png" alt="Logo">
+                <a href="../index/home.html" class="text-white text-2xl font-extrabold tracking-wider">OCTSOFT</a>
+                <div class="nav-links space-x-6 hidden sm:flex">
+                    <a href="#" class="text-white font-bold border-b-2 border-[var(--secondary)] pb-1">Início</a>
+                    <a href="../estoque/estoque.html" class="text-white/70 hover:text-white transition-colors font-medium">Estoque</a>
+                    <a href="../logistica/logistica.html" class="text-white/70 hover:text-white transition-colors font-medium">Entregas</a>
+                </div>
+            </nav>
         </header>
-        <nav>
-            <a href="#">Home</a>
-            <a href="../logistica/logistica.html">Entregas</a>
-            <a href="#">Produtos</a>
-        </nav>
-        <main>
-            <h2>Seja Bem-Vindo ao Sistema de Logística!</h2>
-            <p></p>
+        <main class="max-w-7xl mx-auto mt-8 p-4 md:p-8 bg-white rounded-xl shadow-2xl">
+            <h2 class="text-3xl font-light text-[var(--tertiary)] text-center mb-6 pb-3 border-b-2 border-gray-100">
+                <span id="user">Inicio</span>
+            </h2>
         </main>
-        <footer>
-            <div class="logo_empresa">
-                <img src="../media/github.png">
-                <a href="https://github.com/paulohenriquedutra/Sistema-Logistico">Nosso Github</a>
-            </div>
-        </footer>
+        <script src="home.js"></script> 
     </body>
 </html>
