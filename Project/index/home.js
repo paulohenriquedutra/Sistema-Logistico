@@ -8,13 +8,6 @@ function welcomeUser(username)
         console.error("Erro: Elemento com ID 'user' não encontrado!");
 }
 
-function userModal()
-{
-    const userBtn = document.getElementById('userBtn');
-
-    
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     
     const nomeFixo = 'Admin'; 
