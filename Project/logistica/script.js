@@ -20,7 +20,7 @@ const STATUSES = ["pendente", "em-rota", "entregue"];
 function renderizarEntregas(dados) {
   lista.innerHTML = dados.length
     ? dados.map((e, i) => `
-      <li class="dados p-4 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer ${i % 2 ? 'bg-gray-50' : ''}">
+      <li class="dados p-4 text-sm text-gray-700 hover:bg-gray-100 transition-colors ${i % 2 ? 'bg-gray-50' : ''}">
         <div class="dado font-mono text-xs text-gray-500">${e.id}</div>
         <div class="dado font-medium">${e.responsavel}</div>
         <div class="dado font-medium">${e.cliente}</div>
@@ -111,3 +111,4 @@ closeModalBtn.addEventListener("click", closeModal);
 modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
 
 document.addEventListener("DOMContentLoaded", () => renderizarEntregas(entregas));
+
