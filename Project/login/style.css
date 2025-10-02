@@ -18,7 +18,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: url("../media/backgroundlogin.jpg") no-repeat center center fixed;
+  background: url("../media/backgroundlogin.webp") no-repeat center center fixed;
   background-size: cover;
 }
 
@@ -77,4 +77,5 @@ button{
 button:hover{
     font-weight: bold;
     background-color: darkgreen;
+
 }
