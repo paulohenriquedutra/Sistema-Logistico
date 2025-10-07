@@ -15,7 +15,7 @@
                 <img class="left-img" src="../media/meeting.png" width="300px" alt="">
             </div>
             <div class="right-box">
-                <form>
+                <form id="loginForm">
                     <h1>Login</h1>
                     <div><input type="email" id="login" placeholder="email">
                     <img src="../media/user.png" width="16px">
@@ -28,17 +28,21 @@
                             Lembrar senha
                         </label>
                     </div>
-                    <button type="submit" onclick="logar(); return false">Entrar</button>
+                    <button type="submit" type="submit">Entrar</button>
                     <div id="mensagem">Entrando...</div>
                 </form>
-                <script>
-                    function logar(){
+                <script type="module">
+                    import User, { admin } from '../../Class/User.js';
+
+                    function logar(event){
+
+                        event.preventDefault(); 
 
                         let login = document.getElementById("login").value;
                         let senha = document.getElementById("senha").value;
                         const mensagem = document.getElementById('mensagem');
 
-                        if(login === 'admin@admin' && senha === 'admin'){
+                        if(login === admin.login && senha === admin.senha){
                             mensagem.style.display = 'block';
                             location.href="../index/home.html";
                         }
@@ -46,6 +50,8 @@
                             alert('Usuario ou senha incorretos');
                         }
                     }
+
+                    document.getElementById('loginForm').addEventListener('submit', logar);
                 </script>
             </div>
         </div>

@@ -23,37 +23,94 @@
             </nav>
         </header>
         <main class="max-w-7xl mx-auto mt-8 p-4 md:p-8 bg-white rounded-xl shadow-2xl">
-            <h2 class="text-3xl font-light text-[var(--tertiary)] text-center mb-6 pb-3 border-b-2 border-gray-100">
-                <span id="user">Inicio</span>
-            </h2>
-            <section>
-                <button command="show-modal" commandfor="fUserConfig" class="flex flex-col gap-2 p-8 sm:flex-row sm:items-center sm:gap-6 sm:py-4 border-b-4 border border-gray-500">
-                    <img class="mx-auto block h-20 rounded-full sm:mx-0 sm:shrink-0" src="../media/user.png" alt="" />
-                    <div class="space-y-2 text-center sm:text-left">
-                        <div class="space-y-0.5">
-                            <p class="text-lg font-semibold text-black">Configurações de Usuário</p>
-                        </div>
-                    </div>
-                </button>
-            </section>
-        </main>
+            <h2 class="text-3xl font-light text-[var(--tertiary)] text-center mb-6 pb-3 border-b-2 border-gray-100">
+                <span id="user">Início</span>
+            </h2>
+            <section>
+                <!-- BOTÃO DE CONFIGURAÇÃO: Estilo original + ID para JS -->
+                <button id="open-config-modal" class="w-full text-left flex flex-col gap-2 p-8 sm:flex-row sm:items-center sm:gap-6 sm:py-4 border-b-4 border border-gray-500 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
+                    <img class="mx-auto block h-20 w-20 rounded-full sm:mx-0 sm:shrink-0 object-cover" src="../media/user.png" alt="Ícone de Usuário" />
+                    <div class="space-y-2 text-center sm:text-left">
+                        <div class="space-y-0.5">
+                            <p class="text-xl font-bold text-gray-800">Configurações de Usuário</p>
+                            <p class="text-sm text-gray-500">Altere seu nome, login e senha.</p>
+                        </div>
+                    </div>
+                </button>
+                
+                <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Detalhes de Autenticação:</h3>
+                    <p class="text-sm text-gray-500">ID de Usuário (para fins de protótipo): <span id="display-user-id" class="font-mono text-xs bg-gray-200 px-2 py-0.5 rounded">...</span></p>
+                </div>
+            </section>
+        </main>
 
-        <el-dialog>
-            <dialog id="fUserConfig" aria-labelledby="dialog-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
-                <el-dialog-backdrop class="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"></el-dialog-backdrop>
-                <div tabindex="0" class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
-                    <el-dialog-panel class="relative transform overflow-hidden rounded-lg bg-gray-800 text-left shadow-xl outline -outline-offset-1 outline-white/10 transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95">
-                        <div class="bg-[var(--background)] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            Teste de configuração de Usuário
-                        </div>
-                        <div class="bg-[var(--tertiary)] px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="button" command="close" commandfor="fUserConfig" class="inline-flex w-full justify-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-400 sm:ml-3 sm:w-auto">Salvar</button>
-                            <button type="button" command="close" commandfor="fUserConfig" class="mt-3 inline-flex w-full justify-center rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20 sm:mt-0 sm:w-auto">Voltar</button>
-                        </div>
-                    </el-dialog-panel>
-                </div>
-            </dialog>
-        </el-dialog>
-        <script src="home.js"></script> 
+        <!-- Modal de Configuração de Usuário (Estilo Original) -->
+        <dialog id="fUserConfig" class="rounded-xl shadow-2xl p-0 w-full max-w-lg backdrop:bg-black/50">
+            <div class="relative transform overflow-hidden rounded-lg bg-white text-left transition-all">
+                <!-- Área do Formulário (Fundo Branco Simples) -->
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2" id="dialog-title">Configurações de Usuário</h3>
+                    
+                    <form id="userProfileForm" class="space-y-4">
+                        <!-- Campo Nome -->
+                        <div class="flex flex-col space-y-1">
+                            <label for="userNameInput" class="text-sm font-medium text-gray-700">Nome de Exibição:</label>
+                            <input type="text" id="userNameInput" required 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[var(--secondary)] focus:border-[var(--secondary)] transition duration-150"
+                                placeholder="Digite seu novo nome"
+                                maxlength="50">
+                        </div>
+
+                        <!-- Campo Login/Email -->
+                        <div class="flex flex-col space-y-1">
+                            <label for="userLoginInput" class="text-sm font-medium text-gray-700">Login (Email):</label>
+                            <input type="email" id="userLoginInput" required 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[var(--secondary)] focus:border-[var(--secondary)] transition duration-150"
+                                placeholder="Digite seu novo login (email)"
+                                maxlength="100">
+                        </div>
+
+                        <!-- Campos de Senha -->
+                        <div class="pt-4 border-t border-gray-200">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Alterar Senha</h4>
+                            
+                            <div class="flex flex-col space-y-1">
+                                <label for="currentPasswordInput" class="text-sm font-medium text-gray-700">Senha Atual (obrigatório para alterar):</label>
+                                <input type="password" id="currentPasswordInput" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[var(--secondary)] focus:border-[var(--secondary)] transition duration-150"
+                                    placeholder="Sua senha atual"
+                                    maxlength="50">
+                            </div>
+                            
+                            <div class="flex flex-col space-y-1 mt-3">
+                                <label for="newPasswordInput" class="text-sm font-medium text-gray-700">Nova Senha (deixe vazio para não alterar):</label>
+                                <input type="password" id="newPasswordInput" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[var(--secondary)] focus:border-[var(--secondary)] transition duration-150"
+                                    placeholder="Digite sua nova senha"
+                                    maxlength="50">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">Nota: A alteração de senha aqui é simulada e não tem efeito real.</p>
+                        </div>
+                        
+                        <p id="modal-status-message" class="text-sm font-medium h-4"></p>
+                    </form>
+
+                </div>
+                
+                <!-- Rodapé do Modal (Fundo Cinza Claro) -->
+                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 rounded-b-lg">
+                    <!-- Botão Salvar (Cor Terciária - Verde Esmeralda) -->
+                    <button type="button" id="save-user-name" class="inline-flex w-full justify-center rounded-md bg-[var(--tertiary)] px-4 py-2 text-sm font-semibold text-white shadow-lg hover:bg-emerald-600 transition duration-150 sm:ml-3 sm:w-auto">
+                        <span id="save-button-text">Salvar Alterações</span>
+                    </button>
+                    <!-- Botão Voltar (Branco) -->
+                    <button type="button" id="close-modal" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 transition duration-150 sm:mt-0 sm:w-auto">
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </dialog>
+        <script type="module" src="home.js"></script> 
     </body>
 </html>
