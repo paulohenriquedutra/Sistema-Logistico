@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Gerenciamento de Estoque</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../media/logo.png" type="image/x-icon">
+
+    <style>
+    :root {
+      --primary: #033E8C;
+      --secondary: #849EBF;
+      --tertiary: #023E73;
+      --background: #f4f7f9;
+    }
+    body{
+      font-family: 'Inter', sans-serif ;
+    }
+
+    </style>
+  </head>
+  <body class="min-h-screen">
+
+    <header class="sticky top-0 z-10 w-full bg-[var(--primary)] shadow-md" >
+      <nav class="max-w-7xl mx-auto flex justify-between items-center py-4 px-6 lg:px-8">
+        <img src="../media/logo.png" alt="Logo" class="w-[80px]"/>
+        <a href="../index/home.html" class="text-white text-2xl font-extrabold tracking-wider font-inter bg-background">OCTSOFT</a>
+        <div class="nav-links space-x-6 hidden sm:flex">
+          <a href="../index/home.html" class="text-white/70 hover:text-white transition-colors font-medium">Início</a>
+          <a href="../estoque/estoque.html" class="text-white font-bold border-b-2 border-[var(--secondary)] pb-1">Estoque</a>
+          <a href="../logistica/logistica.html" class="text-white/70 hover:text-white transition-colors font-medium">Entregas</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto mt-8 p-4 md:p-8 bg-white rounded-xl shadow-2xl">
+      <div class="top-bar flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-[var(--tertiary)] ">Produtos em Estoque</h2>
+        <button onclick="openModal()" class="bg-[var(--primary)] text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+          + Adicionar Produto
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table id="estoque-table" class="min-w-full border border-gray-300">
+          <thead class="bg-gray-100 text-gray-700">
+            <tr>
+              <th class="p-3 text-left border">Produto</th>
+              <th class="p-3 text-left border">SKU</th>
+              <th class="p-3 text-left border">Quantidade</th>
+              <th class="p-3 text-left border">Localização</th>
+              <th class="p-3 text-left border">Fornecedor</th>
+            </tr>
+          </thead>
+          <tbody id="table-body" class="divide-y divide-gray-200 bg-white">
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- 🔹 MODAL -->
+    <div id="produtoModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
+        <span class="absolute top-3 right-4 text-xl cursor-pointer" onclick="closeModal()">&times;</span>
+        <h2 class="text-xl font-semibold mb-4 text-[var(--tertiary)]">Novo Produto</h2>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block font-medium text-gray-700">Nome do Produto</label>
+            <input type="text" id="nomeProduto" class="w-full border rounded-md p-2" />
+          </div>
+          <div>
+            <label class="block font-medium text-gray-700">SKU</label>
+            <input type="text" id="skuProduto" class="w-full border rounded-md p-2" />
+          </div>
+          <div>
+            <label class="block font-medium text-gray-700">Quantidade</label>
+            <input type="number" id="quantidadeProduto" class="w-full border rounded-md p-2" />
+          </div>
+          <div>
+            <label class="block font-medium text-gray-700">Localização</label>
+            <input type="text" id="localizacaoProduto" class="w-full border rounded-md p-2" />
+          </div>
+          <div>
+            <label class="block font-medium text-gray-700">Fornecedor</label>
+            <input type="text" id="fornecedorProduto" class="w-full border rounded-md p-2" />
+          </div>
+          <button onclick="adicionarProduto()" class="w-full bg-[var(--primary)] text-white py-2 rounded-md hover:bg-blue-700">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const produtos = [
+        { nome: 'Caixa de Parafusos', sku: 'PAR123', quantidade: 150, local: 'A1', fornecedor: 'FixTudo' },
+        { nome: 'Martelo', sku: 'MAR456', quantidade: 107, local: 'B2', fornecedor: 'ToolsMax' },
+        { nome: 'Luva de segurança', sku: 'PRZ433', quantidade: 100, local: 'C4', fornecedor: 'BlackDy' },
+        { nome: 'Tesoura', sku: 'JMT106', quantidade: 180, local: 'D5', fornecedor: 'PeedFax' },
+        { nome: 'Fita isolante', sku: 'MFD655', quantidade: 144, local: 'E2', fornecedor: 'StiVee' },
+      ];
+
+      function renderTabela() {
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = '';
+        produtos.forEach(prod => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td class="p-3 border">${prod.nome}</td>
+            <td class="p-3 border">${prod.sku}</td>
+            <td class="p-3 border">${prod.quantidade}</td>
+            <td class="p-3 border">${prod.local}</td>
+            <td class="p-3 border">${prod.fornecedor}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      function openModal() {
+        document.getElementById('produtoModal').classList.remove('hidden');
+      }
+
+      function closeModal() {
+        document.getElementById('produtoModal').classList.add('hidden');
+      }
+
+      function adicionarProduto() {
+        const nome = document.getElementById('nomeProduto').value;
+        const sku = document.getElementById('skuProduto').value;
+        const quantidade = parseInt(document.getElementById('quantidadeProduto').value);
+        const local = document.getElementById('localizacaoProduto').value;
+        const fornecedor = document.getElementById('fornecedorProduto').value;
+
+        if (!nome || !sku || isNaN(quantidade)) {
+          alert('Preencha os campos obrigatórios.');
+          return;
+        }
+
+        produtos.push({ nome, sku, quantidade, local, fornecedor });
+        renderTabela();
+        closeModal();
+
+        document.getElementById('nomeProduto').value = '';
+        document.getElementById('skuProduto').value = '';
+        document.getElementById('quantidadeProduto').value = '';
+        document.getElementById('localizacaoProduto').value = '';
+        document.getElementById('fornecedorProduto').value = '';
+      }
+
+      renderTabela();
+    </script>
+  </body>
+</html>
