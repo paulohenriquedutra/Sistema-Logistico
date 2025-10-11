@@ -28,7 +28,7 @@
                             Lembrar senha
                         </label>
                     </div>
-                    <button type="submit return 0">Entrar</button>
+                    <button type="submit">Entrar</button>
                     <div id="mensagem">Entrando...</div>
                 </form>
                 <script type="module">
@@ -36,6 +36,7 @@
 
                     function logar(event){
 
+                        event.preventDefault();
                         let login = document.getElementById("login").value;
                         let senha = document.getElementById("senha").value;
                         const mensagem = document.getElementById('mensagem');
@@ -57,3 +58,4 @@
 </body>
 
 </html>
+
