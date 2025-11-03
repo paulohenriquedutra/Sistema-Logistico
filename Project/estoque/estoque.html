@@ -1,158 +1,104 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Gerenciamento de Estoque</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="../media/logo.png" type="image/x-icon">
-
-    <style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciamento de Estoque</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="shortcut icon" href="../media/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+  <style>
     :root {
       --primary: #033E8C;
       --secondary: #849EBF;
       --tertiary: #023E73;
       --background: #f4f7f9;
     }
-    body{
-      font-family: 'Inter', sans-serif ;
+    body {
+      font-family: 'Inter', sans-serif;
     }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-100"> 
 
-    </style>
-  </head>
-  <body class="min-h-screen">
+  <!-- HEADER -->
+  <header class="sticky top-0 z-10 w-full bg-[var(--primary)] shadow-md">
+    <nav class="max-w-7xl mx-auto flex justify-between items-center py-4 px-6 lg:px-8">
+      <img src="../media/logo.png" alt="Logo" class="w-[80px]">
+      <a href="../index/home.html" class="text-white text-2xl font-extrabold tracking-wider">OCTSOFT</a>
+      <div class="nav-links space-x-6 hidden sm:flex">
+        <a href="../index/home.html" class="text-white/70 hover:text-white transition-colors font-medium">Início</a>
+        <a href="estoque.html" class="text-white font-bold border-b-2 border-[var(--secondary)] pb-1">Estoque</a>
+        <a href="../logistica/logistica.html" class="text-white/70 hover:text-white transition-colors font-medium">Entregas</a>
+        <a href="../nfs/notasfiscais.html" class="text-white/70 hover:text-white transition-colors font-medium">Notas Fiscais</a>
+      </div>
+    </nav>
+  </header>
 
-    <header class="sticky top-0 z-10 w-full bg-[var(--primary)] shadow-md" >
-      <nav class="max-w-7xl mx-auto flex justify-between items-center py-4 px-6 lg:px-8">
-        <img src="../media/logo.png" alt="Logo" class="w-[80px]"/>
-        <a href="../index/home.html" class="text-white text-2xl font-extrabold tracking-wider font-inter bg-background">OCTSOFT</a>
-        <div class="nav-links space-x-6 hidden sm:flex">
-          <a href="../index/home.html" class="text-white/70 hover:text-white transition-colors font-medium">Início</a>
-          <a href="#" class="text-white font-bold border-b-2 border-[var(--secondary)] pb-1">Estoque</a>
-          <a href="../logistica/logistica.html" class="text-white/70 hover:text-white transition-colors font-medium">Entregas</a>
-          <a href="../nfs/notasfiscais.html" class="text-white/70 hover:text-white transition-colors font-medium">Notas Fiscais</a>
+  <main class="max-w-7xl mx-auto mt-8 p-4 md:p-8 bg-white rounded-xl shadow-2xl">
+    <h2 class="text-3xl font-light text-[var(--tertiary)] text-center mb-6 pb-3 border-b-2 border-gray-100">Gerenciamento de Estoque</h2>
+
+    <!-- Input de pesquisa -->
+    <section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+  
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <input type="search" id="pesquisa"placeholder="Pesquisar por produto, fornecedor ou ID..."class="w-full sm:w-96 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all">
+        <button id="botao-pesquisa" class="bg-[var(--primary)] text-white font-semibold px-5 py-2 rounded-lg shadow-sm hover:bg-[var(--tertiary)] transition-colors whitespace-nowrap">Pesquisar</button>
+      </div>
+
+      <button onclick="openModal()" class="bg-[var(--primary)] text-white font-semibold px-5 py-2 rounded-lg shadow-sm hover:bg-[var(--tertiary)] transition-colors whitespace-nowrap">+ Adicionar Produto</button>
+    </section>
+
+    <!-- TABELA -->
+    <section class="border border-gray-200 rounded-lg overflow-hidden shadow-inner">
+      <table class="w-full border-collapse">
+        <thead class="bg-gray-50 text-xs font-semibold uppercase text-gray-600 tracking-wider">
+          <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
+            <th class="px-4 bg-gray-50 text-xs font-semibold uppercase text-gray-600 tracking-wider p-4 border-b border-gray-200 text-center">ID</th>
+            <th class="px-4 bg-gray-50 text-xs font-semibold uppercase text-gray-600 tracking-wider p-4 border-b border-gray-200 text-center">Produto</th>
+            <th class="px-4 bg-gray-50 text-xs font-semibold uppercase text-gray-600 tracking-wider p-4 border-b border-gray-200 text-center">Quantidade</th>
+            <th class="px-4 bg-gray-50 text-xs font-semibold uppercase text-gray-600 tracking-wider p-4 border-b border-gray-200 text-center">Localização</th>
+            <th class="px-4 bg-gray-50 text-xs font-semibold uppercase text-gray-600 tracking-wider p-4 border-b border-gray-200 text-center">Fornecedor</th>
+          </tr>
+        </thead>
+        <tbody id="corpo-tabela" class="divide-y divide-gray-100">
+        </tbody>
+      </table>
+    </section>
+
+  <!-- MODAL -->
+  <div id="produtoModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md transform transition-transform duration-300 scale-95">
+      <h3 class="text-xl font-semibold mb-4 text-[var(--primary)] border-b pb-2">Adicionar Novo Produto</h3>
+      <form id="produtoForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Nome do Produto</label>
+          <input type="text" id="nomeProduto" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
         </div>
-      </nav>
-    </header>
-
-    <main class="max-w-7xl mx-auto mt-8 p-4 md:p-8 bg-white rounded-xl shadow-2xl">
-      <div class="top-bar flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-[var(--tertiary)] ">Produtos em Estoque</h2>
-        <button onclick="openModal()" class="bg-[var(--primary)] text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
-          + Adicionar Produto
-        </button>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table id="estoque-table" class="min-w-full border border-gray-300">
-          <thead class="bg-gray-100 text-gray-700">
-            <tr>
-              <th class="p-3 text-left border">Produto</th>
-              <th class="p-3 text-left border">SKU</th>
-              <th class="p-3 text-left border">Quantidade</th>
-              <th class="p-3 text-left border">Localização</th>
-              <th class="p-3 text-left border">Fornecedor</th>
-            </tr>
-          </thead>
-          <tbody id="table-body" class="divide-y divide-gray-200 bg-white">
-          </tbody>
-        </table>
-      </div>
-    </main>
-
-    <!-- 🔹 MODAL -->
-    <div id="produtoModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
-        <span class="absolute top-3 right-4 text-xl cursor-pointer" onclick="closeModal()">&times;</span>
-        <h2 class="text-xl font-semibold mb-4 text-[var(--tertiary)]">Novo Produto</h2>
-
-        <div class="space-y-3">
-          <div>
-            <label class="block font-medium text-gray-700">Nome do Produto</label>
-            <input type="text" id="nomeProduto" class="w-full border rounded-md p-2" />
-          </div>
-          <div>
-            <label class="block font-medium text-gray-700">SKU</label>
-            <input type="text" id="skuProduto" class="w-full border rounded-md p-2" />
-          </div>
-          <div>
-            <label class="block font-medium text-gray-700">Quantidade</label>
-            <input type="number" id="quantidadeProduto" class="w-full border rounded-md p-2" />
-          </div>
-          <div>
-            <label class="block font-medium text-gray-700">Localização</label>
-            <input type="text" id="localizacaoProduto" class="w-full border rounded-md p-2" />
-          </div>
-          <div>
-            <label class="block font-medium text-gray-700">Fornecedor</label>
-            <input type="text" id="fornecedorProduto" class="w-full border rounded-md p-2" />
-          </div>
-          <button onclick="adicionarProduto()" class="w-full bg-[var(--primary)] text-white py-2 rounded-md hover:bg-blue-700">
-            Salvar
-          </button>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">ID</label>
+          <input type="text" id="IdProduto" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
         </div>
-      </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Quantidade</label>
+          <input type="number" id="quantidadeProduto" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Localização</label>
+          <input type="text" id="localizacaoProduto" class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Fornecedor</label>
+          <input type="text" id="fornecedorProduto" class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-4">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">Salvar Produto</button>
+        </div>
+      </form>
     </div>
-
-    <script>
-      const produtos = [
-        { nome: 'Caixa de Parafusos', sku: 'PAR123', quantidade: 150, local: 'A1', fornecedor: 'FixTudo' },
-        { nome: 'Martelo', sku: 'MAR456', quantidade: 107, local: 'B2', fornecedor: 'ToolsMax' },
-        { nome: 'Luva de segurança', sku: 'PRZ433', quantidade: 100, local: 'C4', fornecedor: 'BlackDy' },
-        { nome: 'Tesoura', sku: 'JMT106', quantidade: 180, local: 'D5', fornecedor: 'PeedFax' },
-        { nome: 'Fita isolante', sku: 'MFD655', quantidade: 144, local: 'E2', fornecedor: 'StiVee' },
-      ];
-
-      function renderTabela() {
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = '';
-        produtos.forEach(prod => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td class="p-3 border">${prod.nome}</td>
-            <td class="p-3 border">${prod.sku}</td>
-            <td class="p-3 border">${prod.quantidade}</td>
-            <td class="p-3 border">${prod.local}</td>
-            <td class="p-3 border">${prod.fornecedor}</td>
-          `;
-          tbody.appendChild(row);
-        });
-      }
-
-      function openModal() {
-        document.getElementById('produtoModal').classList.remove('hidden');
-      }
-
-      function closeModal() {
-        document.getElementById('produtoModal').classList.add('hidden');
-      }
-
-      function adicionarProduto() {
-        const nome = document.getElementById('nomeProduto').value;
-        const sku = document.getElementById('skuProduto').value;
-        const quantidade = parseInt(document.getElementById('quantidadeProduto').value);
-        const local = document.getElementById('localizacaoProduto').value;
-        const fornecedor = document.getElementById('fornecedorProduto').value;
-
-        if (!nome || !sku || isNaN(quantidade)) {
-          alert('Preencha os campos obrigatórios.');
-          return;
-        }
-
-        produtos.push({ nome, sku, quantidade, local, fornecedor });
-        renderTabela();
-        closeModal();
-
-        document.getElementById('nomeProduto').value = '';
-        document.getElementById('skuProduto').value = '';
-        document.getElementById('quantidadeProduto').value = '';
-        document.getElementById('localizacaoProduto').value = '';
-        document.getElementById('fornecedorProduto').value = '';
-      }
-
-      renderTabela();
-    </script>
-  </body>
+  </div>
+</body>
 </html>
-
