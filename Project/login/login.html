@@ -31,32 +31,12 @@
                     <button type="submit">Entrar</button>
                     <div id="mensagem">Entrando...</div>
                 </form>
-                <script type="module">
-                    import User, { admin } from '../../Class/User.js';
-
-                    function logar(event){
-
-                        event.preventDefault();
-                        let login = document.getElementById("login").value;
-                        let senha = document.getElementById("senha").value;
-                        const mensagem = document.getElementById('mensagem');
-
-                        if(login === admin.login && senha === admin.senha){
-                            mensagem.style.display = 'block';
-                            location.href="../index/home.html";
-                        }
-                        else{
-                            alert('Usuario ou senha incorretos');
-                        }
-                    }
-
-                    document.getElementById('loginForm').addEventListener('submit', logar);
-                </script>
             </div>
         </div>
     </div>
 </body>
 
 </html>
+
 
 
