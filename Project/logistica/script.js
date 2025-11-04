@@ -39,10 +39,8 @@ function aplicarFiltros() {
 
   if (termo) {
     filtradas = filtradas.filter(e =>
-      e.id.toLowerCase().includes(termo) ||
-      e.responsavel.toLowerCase().includes(termo) ||
-      e.cliente.toLowerCase().includes(termo) ||
-      e.nf.includes(termo)
+      (e.id?.toString().toLowerCase().includes(termo)) ||
+      (e.cliente?.toLowerCase().includes(termo)),
     );
   }
 
@@ -170,3 +168,4 @@ openModalBtn.addEventListener("click", () => {
 closeModalBtn.addEventListener("click", closeModal);
 modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
 document.addEventListener("DOMContentLoaded", carregarEntregas);
+
