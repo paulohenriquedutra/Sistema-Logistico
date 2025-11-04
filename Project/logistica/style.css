@@ -21,7 +21,7 @@ header {
 
 .header-grid, .dados {
     display: grid;
-    grid-template-columns: 50px 150px 150px 100px 200px; 
+    grid-template-columns: 50px 100px 100px 100px 75px 150px; ; 
     gap: 7rem;
     align-items: center;
 }
@@ -56,3 +56,4 @@ header {
     display: none;
     }
 }
+
