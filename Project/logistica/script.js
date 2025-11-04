@@ -1,11 +1,4 @@
-window.entregas = [
-  { id: "001", responsavel: "João Silva", cliente: "Tech Solutions", nf: "987654321", status: "pendente" },
-  { id: "002", responsavel: "Maria Souza", cliente: "E-Commerce LTDA", nf: "987654322", status: "em-rota" },
-  { id: "003", responsavel: "Carlos Pereira", cliente: "Construtora Alpha", nf: "987654323", status: "entregue" },
-  { id: "005", responsavel: "Pedro Santos", cliente: "Indústria Metal", nf: "987654325", status: "pendente" },
-  { id: "006", responsavel: "Juliana Lima", cliente: "Escritório Contábil", nf: "987654326", status: "em-rota" },
-  { id: "007", responsavel: "Ricardo Nunes", cliente: "Residência P.", nf: "987654327", status: "entregue" }
-];
+window.entregas = [];
 
 const lista = document.querySelector(".container-dados");
 const botoesFiltro = document.querySelectorAll(".filtro");
@@ -14,6 +7,7 @@ const modal = document.getElementById("newDeliveryModal");
 const form = document.getElementById("newDeliveryForm");
 const openModalBtn = document.getElementById("openModalBtn");
 const closeModalBtn = document.getElementById("closeModalBtn");
+const entregadorSelect = document.getElementById("entregadorSelect");
 
 const STATUSES = ["pendente", "em-rota", "entregue"];
 
@@ -24,7 +18,8 @@ function renderizarEntregas(dados) {
         <div class="dado font-mono text-xs text-gray-500">${e.id}</div>
         <div class="dado font-medium">${e.responsavel}</div>
         <div class="dado font-medium">${e.cliente}</div>
-        <div class="dado font-medium">${e.nf}</div>
+        <div class="dado font-medium">${e.endereco}</div>
+        <div class="dado font-medium">${e.notaFiscal}</div>
         <div class="dado status-container">
           <button data-id="${e.id}" class="change-status-btn status ${e.status} px-3 py-1 rounded-full font-bold text-center text-xs shadow-md w-full max-w-[180px] hover:shadow-lg transition-shadow">
             ${e.status.toUpperCase().replace('-', ' ')}
@@ -54,15 +49,20 @@ function aplicarFiltros() {
   renderizarEntregas(filtradas);
 }
 
-function handleStatusChange(id) {
+async function handleStatusChange(id) {
   const entrega = entregas.find(e => e.id === id);
   if (!entrega) return;
-  entrega.status = STATUSES[(STATUSES.indexOf(entrega.status) + 1) % STATUSES.length];
-  aplicarFiltros();
-}
 
-function getNextId() {
-  return String(Math.max(...entregas.map(e => +e.id)) + 1).padStart(3, '0');
+  const novoStatus = STATUSES[(STATUSES.indexOf(entrega.status) + 1) % STATUSES.length];
+  entrega.status = novoStatus;
+
+  await fetch(`http://localhost:3000/entregas/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: novoStatus })
+  });
+
+  aplicarFiltros();
 }
 
 function openModal() {
@@ -78,19 +78,75 @@ function closeModal() {
   }, 300);
 }
 
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  entregas.push({
-    id: getNextId(),
-    responsavel: responsavelInput.value,
-    cliente: clienteInput.value,
-    nf: nfInput.value,
-    status: "pendente"
-  });
-  searchInput.value = '';
-  botoesFiltro.forEach(b => b.classList.remove("ativo", "bg-[var(--tertiary)]", "text-white", "shadow-lg"));
+async function carregarEntregas() {
+  const res = await fetch("http://localhost:3000/entregas");
+  window.entregas = await res.json();
   renderizarEntregas(entregas);
-  closeModal();
+}
+
+async function carregarEntregadores() {
+  const res = await fetch("http://localhost:3000/entregadores");
+  const entregadores = await res.json();
+
+  entregadorSelect.innerHTML = '<option value="">Selecione o entregador</option>';
+  entregadores.forEach(ent => {
+    const option = document.createElement("option");
+    option.value = ent.nome;
+    option.textContent = ent.nome;
+    entregadorSelect.appendChild(option);
+  });
+}
+async function carregarNFs() {
+  const res = await fetch("http://localhost:3000/notas-fiscais");
+  const nfs = await res.json();
+  window.notasFiscais = nfs;
+
+  const nfSelect = document.getElementById("nfSelect");
+  nfSelect.innerHTML = '<option value="">Selecione a Nota Fiscal</option>';
+
+  nfs.forEach(nf => {
+    const option = document.createElement("option");
+    option.value = nf.numero;
+    option.textContent = nf.numero;
+    nfSelect.appendChild(option);
+  });
+
+  nfSelect.addEventListener("change", () => {
+    const nfSelecionada = window.notasFiscais.find(n => n.numero === nfSelect.value);
+    const clienteInput = document.getElementById("clienteInput");
+
+    if (nfSelecionada && nfSelecionada.cliente) {
+      clienteInput.value = nfSelecionada.cliente;
+    } else {
+      clienteInput.value = ""; 
+    }
+  });
+}
+
+form.addEventListener('submit', async e => {
+  const endereco = document.getElementById('enderecoInput').value
+  e.preventDefault();
+
+  const novaEntrega = {
+    responsavel: entregadorSelect.value,
+    cliente: clienteInput.value,
+    endereco,
+    notaFiscal: nfSelect.value,
+    status: "pendente"
+  };
+
+  const res = await fetch("http://localhost:3000/entregas", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(novaEntrega)
+  });
+
+  if (res.ok) {
+    await carregarEntregas();
+    closeModal();
+  } else {
+    alert("Erro ao cadastrar entrega!");
+  }
 });
 
 botoesFiltro.forEach(b => b.addEventListener("click", () => {
@@ -106,9 +162,11 @@ lista.addEventListener("click", e => {
 });
 
 searchInput.addEventListener("input", aplicarFiltros);
-openModalBtn.addEventListener("click", openModal);
+openModalBtn.addEventListener("click", () => {
+  openModal();
+  carregarEntregadores(); 
+  carregarNFs();
+});
 closeModalBtn.addEventListener("click", closeModal);
 modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
-
-document.addEventListener("DOMContentLoaded", () => renderizarEntregas(entregas));
-
+document.addEventListener("DOMContentLoaded", carregarEntregas);
