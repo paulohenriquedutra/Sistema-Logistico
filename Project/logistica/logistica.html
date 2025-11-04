@@ -17,7 +17,7 @@
       <div class="nav-links space-x-6 hidden sm:flex">
         <a href="../index/home.html" class="text-white/70 hover:text-white transition-colors font-medium">Início</a>
         <a href="../estoque/estoque.html" class="text-white/70 hover:text-white transition-colors font-medium">Estoque</a>
-        <a href="#" class="text-white font-bold border-b-2 border-[var(--secondary)] pb-1">Entregas</a>
+        <a href="logistica.html" class="text-white font-bold border-b-2 border-[var(--secondary)] pb-1">Entregas</a>
         <a href="../nfs/notasfiscais.html" class="text-white/70 hover:text-white transition-colors font-medium">Notas Fiscais</a> 
       </div>
     </nav>
@@ -45,6 +45,7 @@
         <div>ID</div>
         <div>Responsável</div>
         <div>Cliente</div>
+        <div>Endereço</div>
         <div>NF</div>
         <div>Status</div>
       </div>
@@ -52,22 +53,37 @@
     </section>
   </main>
 
+  <!--MODAL-->
+
   <div id="newDeliveryModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300">
     <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md transform transition-transform duration-300 scale-95">
       <h3 class="text-xl font-semibold mb-4 text-[var(--primary)] border-b pb-2">Registrar Nova Entrega</h3>
       <form id="newDeliveryForm" class="space-y-4">
+
         <div>
-          <label for="responsavelInput" class="block text-sm font-medium text-gray-700">Responsável</label>
-          <input type="text" id="responsavelInput" name="responsavel" required class="mt-1 w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+          <label for="entregadorSelect" class="block text-sm font-medium text-gray-700">Entregador</label>
+          <select id="entregadorSelect" required class="mt-1 w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+            <option value="">Selecione o entregador</option>
+          </select>
         </div>
+
         <div>
-          <label for="clienteInput" class="block text-sm font-medium text-gray-700">Cliente</label>
-          <input type="text" id="clienteInput" name="cliente" required class="mt-1 w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+          <label for="clienteInput" class="block text-sm font-medium text-gray-700" >Cliente</label>
+          <input type="text" id="clienteInput" readonly name="cliente" required class="mt-1 w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
         </div>
+
         <div>
-          <label for="nfInput" class="block text-sm font-medium text-gray-700">Nota Fiscal (NF)</label>
-          <input type="text" id="nfInput" name="nf" required class="mt-1 w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+          <label for="enderecoInput" class="block text-sm font-medium text-gray-700" >Endereço</label>
+          <input type="adress" id="enderecoInput" name="endereco" required class="mt-1 w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
         </div>
+
+        <div>
+          <label for="nfSelect" class="block text-sm font-medium text-gray-700">Nota Fiscal (NF)</label>
+          <select id="nfSelect" required class="mt-1 w-full border border-gray-300 rounded-lg shadow-sm p-2 bg-white focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+            <option value="">Selecione a Nota Fiscal</option>
+          </select>
+        </div>
+
         <div class="flex justify-end space-x-3 pt-4">
           <button type="button" id="closeModalBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors">Cancelar</button>
           <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">Cadastrar Entrega</button>
@@ -77,5 +93,3 @@
   </div>
 </body>
 </html>
-
-
