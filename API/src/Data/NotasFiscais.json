@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "numero": "123456",
+    "cliente": "EMPRESA XYZ",
+    "dataEmissao": "2024-06-15",
+    "idEntrega": 1,
+    "descricao": "Descrição do Produto A",
+    "preco": 10,
+    "quantidade": 100
+  }
+]

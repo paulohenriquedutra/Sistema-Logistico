@@ -1,0 +1,21 @@
+[
+  {
+    "id": 1,
+    "responsavel": "Entregador 1",
+    "endereco": "Rua A, 123",
+    "dataEntregaPrevista": "2024-06-20",
+    "idEntregador": 1,
+    "notaFiscal": 123456,
+    "dataEntrega": null,
+    "cliente": "Cliente XYZ",
+    "status": "entregue"
+  },
+  {
+    "responsavel": "Entregador 1",
+    "cliente": "EMPRESA XYZ",
+    "endereco": "Rua Rubens Meireles",
+    "notaFiscal": "123456",
+    "status": "pendente",
+    "id": 2
+  }
+]

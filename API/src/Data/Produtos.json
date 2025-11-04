@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "nome": "Parafusos M6x20",
+    "quantidade": 500,
+    "localizacao": "P1-A02",
+    "fornecedor": "FixIt Supplies",
+    "precoUnitario": 0.15,
+    "dataDepreciacao": "2025-12-31"
+  }
+]
