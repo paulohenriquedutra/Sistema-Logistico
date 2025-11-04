@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "numero": "123456",
+    "cliente": "EMPRESA XYZ",
+    "dataEmissao": "2024-06-15",
+    "idEntrega": 1,
+    "descricao": "Descrição do Produto A",
+    "preco": 10,
+    "quantidade": 100
+  },
+  {
+    "id": 2,
+    "numero": "654321",
+    "cliente": "TEST S.A",
+    "dataEmissao": "2024-06-16",
+    "idEntrega": 2,
+    "descricao": "Descrição do Produto B",
+    "preco": 20,
+    "quantidade": 50
+  },
+  {
+    "numero": "654322",
+    "cliente": "EMPRESA FICTICIA LTDA",
+    "dataEmissao": "2025-11-03",
+    "preco": "0.13",
+    "id": 3
+  }
+]

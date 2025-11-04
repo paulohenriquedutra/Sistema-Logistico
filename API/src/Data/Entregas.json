@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "responsavel": "Entregador 1",
+    "endereco": "Rua A, 123",
+    "dataEntregaPrevista": "2024-06-20",
+    "idEntregador": 1,
+    "notaFiscal": 123456,
+    "dataEntrega": null,
+    "cliente": "Cliente XYZ",
+    "status": "entregue"
+  },
+  {
+    "responsavel": "Entregador 1",
+    "cliente": "EMPRESA XYZ",
+    "endereco": "",
+    "notaFiscal": "123456",
+    "status": "pendente",
+    "id": 2
+  },
+  {
+    "responsavel": "Entregador 1",
+    "cliente": "EMPRESA FICTICIA LTDA",
+    "endereco": "Rua Condessa Amália Matarazzo 1416",
+    "notaFiscal": "654322",
+    "status": "pendente",
+    "id": 3
+  }
+]
