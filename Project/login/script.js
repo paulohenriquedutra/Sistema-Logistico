@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     mensagem.style.display = "block";
     mensagem.textContent = "Entrando...";
+    mensagem.style.backgroundColor = "";
+    mensagem.style.color = "";
 
     try {
       const response = await fetch("http://localhost:3000/usuarios/login", {
@@ -24,11 +26,16 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("token", data.token);
         window.location.href = "../index/home.html";
       } else {
+        mensagem.style.background = "#e93737ff"
+        mensagem.style.color = "#800a0aff"
         mensagem.textContent = data.message || "Email ou senha inválidos!";
       }
     } catch (error) {
+      mensagem.style.background = "#e93737ff"
+      mensagem.style.color = "#800a0aff"
       mensagem.textContent = "Erro ao conectar ao servidor.";
       console.error(error);
     }
   });
 });
+
