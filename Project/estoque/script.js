@@ -3,19 +3,40 @@ const produtoForm = document.getElementById('produtoForm');
 const modal = document.getElementById('produtoModal');
 const inputPesquisa = document.getElementById('pesquisa');
 const botaoPesquisa = document.getElementById('botao-pesquisa');
-const inputIdProduto = document.getElementById('IdProduto');
+
+const inputs = {
+  id: document.getElementById('IdProduto'),
+  nome: document.getElementById('nomeProduto'),
+  quantidade: document.getElementById('quantidadeProduto'),
+  preco: document.getElementById('precoProduto'),
+  localizacao: document.getElementById('localizacaoProduto'),
+  fornecedor: document.getElementById('fornecedorProduto')
+};
 
 let listaProdutos = [];
 
-function openModal() {
+// xxxxxxxxxxxxxxxxxxxx MODAL xxxxxxxxxxxxxxxxxxxx
+function openModal(produto = null) {
   modal.classList.remove('opacity-0', 'pointer-events-none');
   modal.classList.add('opacity-100');
 
-  const novoId = listaProdutos.length > 0 
-    ? Math.max(...listaProdutos.map(p => parseInt(p.id))) + 1 
-    : 1;
+  if (produto) {
+    inputs.id.value = produto.id;
+    inputs.nome.value = produto.nome;
+    inputs.quantidade.value = produto.quantidade;
+    inputs.preco.value = produto.precoUnitario;
+    inputs.localizacao.value = produto.localizacao || '';
+    inputs.fornecedor.value = produto.fornecedor;
+    produtoForm.querySelector('button[type="submit"]').textContent = 'Atualizar Produto';
+  } else {
+    produtoForm.reset(); 
+    const novoId = listaProdutos.length
+      ? Math.max(...listaProdutos.map(p => p.id)) + 1
+      : 1;
+    inputs.id.value = novoId;
 
-  inputIdProduto.value = novoId.toString();
+    produtoForm.querySelector('button[type="submit"]').textContent = 'Salvar Produto';
+  }
 }
 
 function closeModal() {
@@ -24,80 +45,123 @@ function closeModal() {
   produtoForm.reset();
 }
 
-async function carregarProdutos() {
-  try {
-    const resposta = await fetch('http://localhost:3000/produtos');
-    if (!resposta.ok) throw new Error(`HTTP error! status: ${resposta.status}`);
-    listaProdutos = await resposta.json();
-    exibirProdutos(listaProdutos);
-  } catch (erro) {
-    console.error('Erro ao carregar produtos:', erro);
-    corpoTabela.innerHTML = '<tr><td colspan="5" class="text-center py-2">Não foi possível carregar os produtos.</td></tr>';
-  }
+function formatarPreco(valor) {
+  return valor != null && valor !== ''
+    ? 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',')
+    : '-';
 }
 
+async function fetchProdutos(url, method = 'GET', body = null) {
+  const options = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) options.body = JSON.stringify(body);
+
+  const res = await fetch(url, options);
+  if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+  return res.json();
+}
+
+// xxxxxxxxxxxxxxxxxxxx TABELA xxxxxxxxxxxxxxxxxxxxx
 function exibirProdutos(produtos) {
   corpoTabela.innerHTML = '';
 
-  if (produtos.length === 0) {
-    corpoTabela.innerHTML = '<tr><td colspan="5" class="text-center py-2">Nenhum produto encontrado.</td></tr>';
+  if (!produtos.length) {
+    corpoTabela.innerHTML = '<tr><td colspan="7" class="text-center py-2">Nenhum produto encontrado.</td></tr>';
     return;
   }
 
   produtos.forEach(p => {
     const tr = document.createElement('tr');
     tr.className = 'odd:bg-white even:bg-gray-50 hover:bg-gray-100';
+
     tr.innerHTML = `
-      <td class="text-center px-4 py-2">${p.id}</td>
-      <td class="text-center px-4 py-2">${p.nome}</td>
-      <td class="text-center px-4 py-2">${p.quantidade}</td>
+      <td class="text-center px-4 py-2">${p.id ?? '-'}</td>
+      <td class="text-center px-4 py-2">${p.nome ?? '-'}</td>
+      <td class="text-center px-4 py-2">${p.quantidade ?? '-'}</td>
+      <td class="text-center px-4 py-2">${formatarPreco(p.precoUnitario)}</td>
       <td class="text-center px-4 py-2">${p.localizacao || '-'}</td>
       <td class="text-center px-4 py-2">${p.fornecedor || '-'}</td>
+      <td class="text-center px-4 py-2">
+        <button class="btn-editar px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all">Editar</button>
+        <button onclick="excluirProduto(${p.id})" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all">Excluir</button>
+      </td>
     `;
+
+    tr.querySelector('.btn-editar').addEventListener('click', () => openModal(p));
+
     corpoTabela.appendChild(tr);
   });
 }
 
+// xxxxxxxxxxxxxxxxxxxx CARREGAR xxxxxxxxxxxxxxxxxxxx
+async function carregarProdutos() {
+  try {
+    listaProdutos = await fetchProdutos('http://localhost:3000/produtos');
+    exibirProdutos(listaProdutos);
+  } catch (erro) {
+    console.error('Erro ao carregar produtos:', erro);
+    corpoTabela.innerHTML = '<tr><td colspan="7" class="text-center py-2">Não foi possível carregar os produtos.</td></tr>';
+  }
+}
+
+// xxxxxxxxxxxxxxxxxxxx SALVAR/ATUALIZAR xxxxxxxxxxxxxxxxxxxx
 produtoForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const nome = document.getElementById('nomeProduto').value.trim();
-  const quantidade = document.getElementById('quantidadeProduto').value.trim();
-  const fornecedor = document.getElementById('fornecedorProduto').value.trim();
+  const id = parseInt(inputs.id.value);
+  const produtoExistente = listaProdutos.find(p => p.id === id);
 
-  if (!nome || !quantidade || !fornecedor) {
-    alert('Preencha todos os campos obrigatórios!');
-    return;
-  }
-
-  const novoProduto = {
-    id: parseInt(inputIdProduto.value),
-    nome,
-    quantidade: parseInt(quantidade),
-    localizacao: document.getElementById('localizacaoProduto').value.trim() || null,
-    fornecedor
+  const dadosProduto = {
+    nome: inputs.nome.value.trim(),
+    quantidade: parseInt(inputs.quantidade.value.trim()),
+    precoUnitario: parseFloat(inputs.preco.value.trim().replace(',', '.')),
+    localizacao: inputs.localizacao.value.trim() || null,
+    fornecedor: inputs.fornecedor.value.trim()
   };
 
-  try {
-    const resposta = await fetch('http://localhost:3000/produtos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(novoProduto)
-    });
+  if (!dadosProduto.nome || isNaN(dadosProduto.quantidade) || isNaN(dadosProduto.precoUnitario) || !dadosProduto.fornecedor) {
+    return alert('Preencha todos os campos obrigatórios!');
+  }
 
-    const data = await resposta.json();
-    if (resposta.ok && data.sucesso) {
-      closeModal();
-      carregarProdutos();
-    } else {
-      alert(data.mensagem || 'Erro ao adicionar produto');
-    }
+  try {
+    const url = produtoExistente
+      ? `http://localhost:3000/produtos/${id}`
+      : 'http://localhost:3000/produtos';
+
+    const method = produtoExistente ? 'PUT' : 'POST';
+
+    await fetchProdutos(url, method, dadosProduto);
+
+    closeModal();
+    carregarProdutos();
   } catch (erro) {
-    console.error('Erro ao adicionar produto:', erro);
-    alert('Não foi possível adicionar o produto. Verifique o servidor.');
+    console.error('Erro ao salvar produto:', erro);
+    alert('Não foi possível salvar o produto.');
   }
 });
 
+//DELETE
+async function excluirProduto(id){
+
+  if (!confirm("Deseja realmente excluir este item?")) return;
+
+  try {
+    const res = await fetch(`http://localhost:3000/produtos/${id}`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      alert("Produto excluído com sucesso!");
+      carregarNotas();
+    } else {
+      alert("Erro ao excluir Produto.");
+    }
+  } catch (err) {
+    console.error("Erro ao excluir Produto:", err);
+  }
+}
+
+
+// xxxxxxxxxxxxxxxxxxxx PESQUISA xxxxxxxxxxxxxxxxxxxxxx
 function pesquisarProdutos() {
   const termo = inputPesquisa.value.toLowerCase().trim();
   const filtrados = listaProdutos.filter(p =>
