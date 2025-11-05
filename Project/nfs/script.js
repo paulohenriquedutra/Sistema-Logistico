@@ -202,7 +202,7 @@ async function carregarNotas() {
         <td class="px-4 py-2 text-center border-b">${nf.numero}</td>
         <td class="px-4 py-2 text-center border-b">${nf.cliente}</td>
         <td class="px-4 py-2 text-center border-b">${nf.dataEmissao}</td>
-        <td class="px-4 py-2 text-center border-b">R$ ${nf.valorTotal?.toFixed(2) ?? "0.00"}</td>
+        <td class="px-4 py-2 text-center border-b">R$ ${formatarPreco(nf.valorTotal)}</td>
         <td class="px-4 py-2 text-center border-b">
           <button onclick="verDetalhesNF(${nf.id})" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all"">Ver</button>
           <button onclick="excluirNF(${nf.id})" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all">Excluir</button>
@@ -241,7 +241,7 @@ document.getElementById("botao-pesquisaNF").addEventListener("click", async () =
         <td class="px-4 py-2 text-center border-b">${nf.numero}</td>
         <td class="px-4 py-2 text-center border-b">${nf.cliente}</td>
         <td class="px-4 py-2 text-center border-b">${nf.dataEmissao}</td>
-        <td class="px-4 py-2 text-center border-b">R$ ${nf.valorTotal?.toFixed(2) ?? "0.00"}</td>
+        <td class="px-4 py-2 text-center border-b">R$ ${formatarPreco(nf.valorTotal)}</td>
         <td class="px-4 py-2 text-center border-b">
           <button onclick="verDetalhesNF(${nf.id})" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all">Ver</button>
           <button onclick="excluirNF(${nf.id})" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all">Excluir</button>
@@ -259,6 +259,10 @@ document.getElementById("pesquisaNF").addEventListener("keypress", (e) => {
     document.getElementById("botao-pesquisaNF").click();
   }
 });
+function formatarPreco(valor) {
+  return valor != null && valor !== ''
+    ? 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',')
+    : '-';
 
 // DELETE
 async function excluirNF(id) {
@@ -371,3 +375,4 @@ function removerProduto(index) {
   produtosAdicionados.splice(index, 1);
   atualizarTabelaProdutos();
 }
+
