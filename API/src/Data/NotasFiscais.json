@@ -1,12 +1,50 @@
 [
   {
     "id": 1,
+    "cnpj": "15.148.929/0001-30",
     "numero": "123456",
     "cliente": "EMPRESA XYZ",
     "dataEmissao": "2024-06-15",
     "idEntrega": 1,
+    "produto": "Mouse",
+    "valorTotal": 200,
     "descricao": "Descrição do Produto A",
     "preco": 10,
-    "quantidade": 100
+    "quantidade": 100,
+    "endereco": "rua teste 204"
+  },
+  {
+    "numero": "123458",
+    "cnpj": "37.256.437/0001-65",
+    "cliente": "EMPRESA TEST",
+    "endereco": "Rua Laranja, 145",
+    "dataEmissao": "2025-11-05",
+    "produto": "Parafusos M6x20",
+    "quantidade": 18,
+    "valorTotal": 2.7,
+    "id": 3
+  },
+  {
+    "numero": "123460",
+    "cnpj": "10.604.457/0001-65",
+    "cliente": "PLACEHOLDERS S.A",
+    "endereco": "Rua Laranja, 145",
+    "dataEmissao": "2025-11-05",
+    "produtos": [
+      {
+        "nome": "Mouse",
+        "quantidade": 10,
+        "precoUnitario": 50.25,
+        "valorTotal": 502.5
+      },
+      {
+        "nome": "Teclado",
+        "quantidade": 9,
+        "precoUnitario": 50.25,
+        "valorTotal": 452.25
+      }
+    ],
+    "valorTotal": 954.75,
+    "id": 5
   }
 ]
