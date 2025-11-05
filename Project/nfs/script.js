@@ -132,7 +132,6 @@ form.addEventListener("submit", async (e) => {
     valorTotal: parseFloat(valorInput.value)
   };
 
-
   try {
     const res = await fetch("http://localhost:3000/notas-fiscais", {
       method: "POST",
@@ -141,13 +140,49 @@ form.addEventListener("submit", async (e) => {
     });
 
     if (res.ok) {
-      alert("Nota Fiscal salva com sucesso!");
+      console.log("Nota salva com sucesso!");
+
+      for (const item of produtosAdicionados) {
+        try {
+          const respProd = await fetch(`http://localhost:3000/produtos/${item.id}`);
+          if (!respProd.ok) {
+            console.warn(`Não foi possível buscar produto ${item.id}`);
+            continue;
+          }
+
+          const prodAtual = await respProd.json();
+          const quantidadeAtualNoServidor = prodAtual.quantidade ?? prodAtual.Quantidade ?? 0;
+
+          const novaQuantidade = Math.max(0, quantidadeAtualNoServidor - item.quantidade);
+
+          const updateResp = await fetch(`http://localhost:3000/produtos/${item.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ quantidade: novaQuantidade })
+          });
+
+          if (!updateResp.ok) {
+            console.error(`Erro ao atualizar estoque do produto ${item.id}`);
+          }
+        } catch (errItem) {
+          console.error(`Falha ao atualizar produto ${item.id}:`, errItem);
+        }
+      }
+
+      await carregarProdutos();
+
+      alert("Nota fiscal emitida");
+      form.reset();
+      produtosAdicionados = [];
+      atualizarTabelaProdutos();
       closeModal();
     } else {
+      console.error("Erro ao salvar nota:", await res.text());
       alert("Erro ao salvar NF");
     }
   } catch (err) {
-    console.error("Erro ao salvar NF:", err);
+    console.error("Erro ao emitir nota:", err);
+    alert("Falha na comunicação com o servidor.");
   }
 });
 
@@ -272,7 +307,6 @@ function verDetalhesNF(id) {
 
 // ADICIONAR PRODUTO
 document.getElementById("adicionarProdutoNF").addEventListener("click", () => {
-  
   if (!produtoSelecionado) {
     alert("Selecione um produto válido antes de adicionar.");
     return;
@@ -287,16 +321,18 @@ document.getElementById("adicionarProdutoNF").addEventListener("click", () => {
   const precoUnitario = produtoSelecionado.precoUnitario ?? 0;
   const valorTotal = precoUnitario * quantidade;
 
-  const existente = produtosAdicionados.find(p => p.nome === produtoSelecionado.nome);
+  const existente = produtosAdicionados.find(p => p.id === produtoSelecionado.id);
   if (existente) {
     existente.quantidade += quantidade;
     existente.valorTotal += valorTotal;
   } else {
     produtosAdicionados.push({
+      id: produtoSelecionado.id,               
       nome: produtoSelecionado.nome,
       quantidade,
       precoUnitario,
-      valorTotal
+      valorTotal,
+      quantidadeEstoque: produtoSelecionado.quantidade ?? produtoSelecionado.Quantidade ?? 0 
     });
   }
 
@@ -306,7 +342,6 @@ document.getElementById("adicionarProdutoNF").addEventListener("click", () => {
   quantidadeInput.value = "";
   listaProdutos.classList.add("hidden");
 });
-
 
 
 //ATUALIZAR TABELA
