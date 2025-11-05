@@ -1,5 +1,3 @@
-import User, { admin } from '../../Class/User.js';
-
 // --- Elementos do DOM ---
 const userNameDisplay = document.getElementById('user');
 const userIdDisplay = document.getElementById('display-user-id');
@@ -12,41 +10,48 @@ const userLoginInput = document.getElementById('userLoginInput');
 const modalStatusMessage = document.getElementById('modal-status-message');
 const saveButtonText = document.getElementById('save-button-text');
 
+let currentUserId = 1; 
 
 /**
- * Define o texto de boas-vindas na interface e atualiza a exibição.
- * @param {string} username - O nome do usuário para a saudação.
+ * Busca os dados do usuário na API e preenche a interface.
  */
-function welcomeUser(username) {
-    if (userNameDisplay) {
-        // Atualiza a saudação na tela principal
-        userNameDisplay.textContent = 'Seja bem vindo ' + username + '!';
-    } else {
-        console.error("Erro: Elemento com ID 'user' não encontrado!");
+async function fetchUserData() {
+    try {
+        const res = await fetch(`http://localhost:3000/usuarios/${currentUserId}`);
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+        const user = await res.json();
+
+        // Atualiza a interface
+        if (userNameDisplay) userNameDisplay.textContent = 'Seja bem-vindo ' + user.nome + '!';
+        if (userIdDisplay) userIdDisplay.textContent = user.id;
+
+        return user;
+    } catch (erro) {
+        console.error('Erro ao buscar dados do usuário:', erro);
+        return null;
     }
 }
 
 /**
- * Popula o modal de configuração com os dados atuais do objeto 'admin'.
+ * Popula o modal de configuração com os dados do usuário
  */
-function populateModal() {
-    userNameInput.value = admin.nome || '';
-    userLoginInput.value = admin.login || '';
+function populateModal(user) {
+    if (!user) return;
+    userNameInput.value = user.nome || '';
+    userLoginInput.value = user.login || '';
     
-    // Campos de senha são deixados vazios por segurança
     document.getElementById('currentPasswordInput').value = '';
     document.getElementById('newPasswordInput').value = '';
-    modalStatusMessage.textContent = ''; // Limpa a mensagem de status
+    modalStatusMessage.textContent = '';
 }
 
 /**
- * Manipulador para salvar as configurações, atualizando o objeto 'admin' local.
+ * Salva alterações do usuário via API
  */
 async function handleSaveProfile() {
     const newUserName = userNameInput.value.trim();
     const newUserLogin = userLoginInput.value.trim();
-    
-    // Validação básica
+
     if (!newUserName || !newUserLogin) {
         modalStatusMessage.textContent = 'Nome e Login são obrigatórios.';
         modalStatusMessage.className = 'text-sm font-medium text-red-600 h-4';
@@ -57,28 +62,26 @@ async function handleSaveProfile() {
     saveUserBtn.disabled = true;
 
     try {
-        // Usa o método do objeto admin (que simula uma chamada de API/DB)
-        const success = await admin.updateProfile(newUserName, newUserLogin);
+        const res = await fetch(`http://localhost:3000/usuarios/${currentUserId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome: newUserName, login: newUserLogin })
+        });
 
-        if (success) {
-            modalStatusMessage.textContent = 'Configurações salvas com sucesso!';
-            modalStatusMessage.className = 'text-sm font-medium text-green-600 h-4';
-            
-            // Atualiza o display principal
-            welcomeUser(admin.nome);
-            
-            // SIMULAÇÃO DE TROCA DE SENHA:
-            const newPassword = document.getElementById('newPasswordInput').value.trim();
-            if (newPassword) {
-                 console.log("Simulação de troca de senha concluída para a nova senha.");
-                 // Em um caso real, você faria uma chamada para admin.changePassword(newPassword)
-            }
-        } else {
-            throw new Error("Falha na simulação de atualização.");
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+
+        modalStatusMessage.textContent = 'Configurações salvas com sucesso!';
+        modalStatusMessage.className = 'text-sm font-medium text-green-600 h-4';
+
+        await fetchUserData();
+
+        const newPassword = document.getElementById('newPasswordInput').value.trim();
+        if (newPassword) {
+            console.log('troca de senha concluída.');
         }
 
-    } catch (error) {
-        console.error("Erro ao salvar o perfil:", error);
+    } catch (erro) {
+        console.error('Erro ao salvar perfil:', erro);
         modalStatusMessage.textContent = 'Erro ao salvar. Verifique o console.';
         modalStatusMessage.className = 'text-sm font-medium text-red-600 h-4';
     } finally {
@@ -87,21 +90,15 @@ async function handleSaveProfile() {
     }
 }
 
-
 // --- Event Listeners ---
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Define a saudação inicial com base no objeto admin
-    welcomeUser(admin.nome);
+document.addEventListener('DOMContentLoaded', async () => {
     
-    // 2. Exibe o ID do usuário (simulado)
-    if (userIdDisplay) {
-        userIdDisplay.textContent = admin.id;
-    }
+    const user = await fetchUserData();
 
-    // 3. Configura os eventos do Modal
+    // Modal
     openModalBtn.addEventListener('click', () => {
         if (userConfigModal) {
-            populateModal(); // Preenche o modal com os dados atuais de 'admin'
+            populateModal(user);
             userConfigModal.showModal();
         }
     });
@@ -109,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     closeModalBtn.addEventListener('click', () => {
         if (userConfigModal) {
             userConfigModal.close();
-            modalStatusMessage.textContent = ''; // Limpa o status ao fechar
+            modalStatusMessage.textContent = '';
         }
     });
 
