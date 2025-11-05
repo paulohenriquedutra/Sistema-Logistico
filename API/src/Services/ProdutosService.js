@@ -23,6 +23,7 @@ function inserir(produto) {
     id: produto.id,
     nome: produto.nome,
     quantidade: produto.quantidade,
+    precoUnitario: produto.precoUnitario,
     localizacao: produto.localizacao || "",
     fornecedor: produto.fornecedor || "",
   };
