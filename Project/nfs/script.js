@@ -202,7 +202,7 @@ async function carregarNotas() {
         <td class="px-4 py-2 text-center border-b">${nf.numero}</td>
         <td class="px-4 py-2 text-center border-b">${nf.cliente}</td>
         <td class="px-4 py-2 text-center border-b">${nf.dataEmissao}</td>
-        <td class="px-4 py-2 text-center border-b">R$ ${formatarPreco(nf.valorTotal)}</td>
+        <td class="px-4 py-2 text-center border-b">${formatarPreco(nf.valorTotal)}</td>
         <td class="px-4 py-2 text-center border-b">
           <button onclick="verDetalhesNF(${nf.id})" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all"">Ver</button>
           <button onclick="excluirNF(${nf.id})" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all">Excluir</button>
@@ -241,7 +241,7 @@ document.getElementById("botao-pesquisaNF").addEventListener("click", async () =
         <td class="px-4 py-2 text-center border-b">${nf.numero}</td>
         <td class="px-4 py-2 text-center border-b">${nf.cliente}</td>
         <td class="px-4 py-2 text-center border-b">${nf.dataEmissao}</td>
-        <td class="px-4 py-2 text-center border-b">R$ ${formatarPreco(nf.valorTotal)}</td>
+        <td class="px-4 py-2 text-center border-b">${formatarPreco(nf.valorTotal)}</td>
         <td class="px-4 py-2 text-center border-b">
           <button onclick="verDetalhesNF(${nf.id})" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all">Ver</button>
           <button onclick="excluirNF(${nf.id})" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all">Excluir</button>
@@ -375,4 +375,5 @@ function removerProduto(index) {
   produtosAdicionados.splice(index, 1);
   atualizarTabelaProdutos();
 }
+
 
