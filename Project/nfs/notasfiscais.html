@@ -70,20 +70,63 @@
       <form id="produtoForm" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700">Número NF</label>
-          <input type="text" readonly id="numeroNF" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+          <input type="text" readonly id="numeroNF" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 bg-gray-100">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700">Cliente</label>
+          <div>
+          <label class="block text-sm font-medium text-gray-700">CNPJ</label>
+          <input type="cnpj" id="cnpjNF" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+        </div>
+          <label class="block text-sm font-medium text-gray-700">Razão Social / Cliente</label>
           <input type="text" id="clienteNF" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700">Data</label>
-          <input type="date" readonly id="dataNF" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
-        </div>
+          <label class="block text-sm font-medium text-gray-700">Endereço</label>
+          <input type="adress" id="adressNF" required
+            class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+        </div> 
         <div>
-          <label class="block text-sm font-medium text-gray-700">Valor</label>
-          <input type="number" step="0.01" id="valorNF" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+          <label class="block text-sm font-medium text-gray-700">Data</label>
+          <input type="date" readonly id="dataNF" required class="mt-1 w-full border border-gray-300 rounded-lg p-2 bg-gray-100">
         </div>
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700">Produto</label>
+          <input type="text" id="produtoNF" placeholder="Digite para buscar..." 
+            class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]" 
+            autocomplete="off">
+        
+          <ul id="listaProdutos" 
+            class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-1 shadow-lg max-h-40 overflow-y-auto hidden">
+          </ul>
+        </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Quantidade</label>
+        <input type="number" id="quantidadeNF" min="1" value="1" 
+          class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]">
+      </div>
+      <button type="button" id="adicionarProdutoNF" class="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition-all">
+        Adicionar Produto
+      </button>
+
+      <table class="w-full text-sm mt-3 border">
+        <thead class="bg-gray-100">
+          <tr>
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Unitário</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tabelaProdutosNF"></tbody>
+      </table>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Valor Total (R$)</label>
+        <input type="number" step="0.01" id="valorNF" readonly
+          class="mt-1 w-full border border-gray-300 rounded-lg p-2 bg-gray-100">
+      </div>
         <div class="flex justify-end space-x-3 pt-4">
           <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors">Cancelar</button>
           <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">Salvar NF</button>
