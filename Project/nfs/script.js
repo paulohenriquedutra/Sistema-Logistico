@@ -263,7 +263,7 @@ function formatarPreco(valor) {
   return valor != null && valor !== ''
     ? 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',')
     : '-';
-
+}
 // DELETE
 async function excluirNF(id) {
   if (!confirm("Deseja realmente excluir esta nota fiscal?")) return;
@@ -375,5 +375,6 @@ function removerProduto(index) {
   produtosAdicionados.splice(index, 1);
   atualizarTabelaProdutos();
 }
+
 
 
