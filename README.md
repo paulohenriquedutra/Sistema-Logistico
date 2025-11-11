@@ -18,6 +18,13 @@ O projeto foi desenvolvido primariamente para **fins acadêmicos**, refletindo a
 * [Sistema-Logistico_API](https://github.com/Caioaraujo48/Sistema-Logistico_API/)
 <h6><i>O projeto já vai ter a API integrada no sistema, então é muito importante que você leia a descrição desse projeto</i></h6>
 
+### Requisitos: Frontend
+
+<p>Para rodar o projeto, não é preciso de nada, você pode estar começando pelo arquivo ~/login/login.html. Porém é recomendado utilizar o Live Service no Visual Studio Code</p>
+
+* Live Server: https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer
+* Visual Studio Code: https://code.visualstudio.com/
+
 ## 🚀 Tecnologias Utilizadas
 
 | Categoria | Tecnologia | Descrição |
